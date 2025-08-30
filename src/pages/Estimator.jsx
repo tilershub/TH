@@ -183,4 +183,173 @@ const Estimator = () => {
                 name="skirting"
                 value={formData.skirting}
                 onChange={handleInputChange}
-                placeholder="
+                placeholder="Skirting (ft) – optional"
+                style={{ padding: '12px', border: '1px solid #ccc', borderRadius: '6px', fontSize: '16px' }}
+              />
+              <input
+                type="number"
+                name="laborRate"
+                value={formData.laborRate}
+                onChange={handleInputChange}
+                placeholder="Labor rate (LKR/sqft) – optional"
+                style={{ padding: '12px', border: '1px solid #ccc', borderRadius: '6px', fontSize: '16px' }}
+              />
+            </div>
+          </fieldset>
+
+          <button
+            onClick={calculateEstimate}
+            disabled={loading}
+            style={{
+              padding: '12px',
+              background: '#003049',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '6px',
+              fontSize: '16px',
+              fontWeight: 'bold',
+              cursor: loading ? 'not-allowed' : 'pointer',
+              opacity: loading ? 0.7 : 1
+            }}
+          >
+            {loading ? 'Calculating...' : 'Calculate'}
+          </button>
+        </div>
+
+        {report && (
+          <div style={{ 
+            background: '#f8fbfc', 
+            padding: '20px', 
+            borderRadius: '8px', 
+            marginTop: '20px' 
+          }}>
+            <h3>📌 Project Summary</h3>
+            <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '20px' }}>
+              <tbody>
+                <tr>
+                  <th style={{ border: '1px solid #ddd', padding: '10px', background: '#e6f0f8' }}>Area</th>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>{report.projectSummary.area} sqft</td>
+                </tr>
+                <tr>
+                  <th style={{ border: '1px solid #ddd', padding: '10px', background: '#e6f0f8' }}>Skirting</th>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>{report.projectSummary.skirting} ft</td>
+                </tr>
+                <tr>
+                  <th style={{ border: '1px solid #ddd', padding: '10px', background: '#e6f0f8' }}>Tile Size</th>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>{report.projectSummary.tileSize}</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h3>🧱 Floor Bed Estimate</h3>
+            <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '20px' }}>
+              <thead>
+                <tr>
+                  <th style={{ border: '1px solid #ddd', padding: '10px', background: '#e6f0f8' }}>Material</th>
+                  <th style={{ border: '1px solid #ddd', padding: '10px', background: '#e6f0f8' }}>Qty</th>
+                  <th style={{ border: '1px solid #ddd', padding: '10px', background: '#e6f0f8' }}>Cost (LKR)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>Cement (50kg)</td>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>{report.floorBed.cement.min} – {report.floorBed.cement.max}</td>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>{report.floorBed.cement.costMin.toLocaleString()} – {report.floorBed.cement.costMax.toLocaleString()}</td>
+                </tr>
+                <tr>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>Sand (1 cube)</td>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>{report.floorBed.sand.min} – {report.floorBed.sand.max}</td>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>{report.floorBed.sand.costMin.toLocaleString()} – {report.floorBed.sand.costMax.toLocaleString()}</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h3>🧱 Tiling Estimate</h3>
+            <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '20px' }}>
+              <tbody>
+                <tr>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>Floor Tiles</td>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>{report.tiling.floorTiles}</td>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>-</td>
+                </tr>
+                <tr>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>Skirting Tiles</td>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>{report.tiling.skirtingTiles}</td>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>-</td>
+                </tr>
+                <tr style={{ fontWeight: 'bold' }}>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>Total Tiles (5% wastage)</td>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>{report.tiling.totalTiles}</td>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>{report.tiling.tileCost.toLocaleString()}</td>
+                </tr>
+                <tr>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>Adhesive (25kg)</td>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>{report.tiling.adhesive.min} – {report.tiling.adhesive.max}</td>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>{report.tiling.adhesive.costMin.toLocaleString()} – {report.tiling.adhesive.costMax.toLocaleString()}</td>
+                </tr>
+                <tr>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>Clips (100 pcs)</td>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>{report.tiling.clips.count}</td>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>{report.tiling.clips.cost.toLocaleString()}</td>
+                </tr>
+                <tr>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>Grout (1kg)</td>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>{report.tiling.grout.count}</td>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>{report.tiling.grout.cost.toLocaleString()}</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h3>👷 Labor Cost</h3>
+            <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: '20px' }}>
+              <thead>
+                <tr>
+                  <th style={{ border: '1px solid #ddd', padding: '10px', background: '#e6f0f8' }}>Type</th>
+                  <th style={{ border: '1px solid #ddd', padding: '10px', background: '#e6f0f8' }}>Min</th>
+                  <th style={{ border: '1px solid #ddd', padding: '10px', background: '#e6f0f8' }}>Max</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>Floor Labor</td>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>LKR {report.labor.floor.min.toLocaleString()}</td>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>LKR {report.labor.floor.max.toLocaleString()}</td>
+                </tr>
+                <tr>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>Skirting Labor</td>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>LKR {report.labor.skirting.min.toLocaleString()}</td>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>LKR {report.labor.skirting.max.toLocaleString()}</td>
+                </tr>
+                <tr style={{ fontWeight: 'bold' }}>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>Total Labor</td>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>LKR {report.labor.total.min.toLocaleString()}</td>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>LKR {report.labor.total.max.toLocaleString()}</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h3>💰 Total Cost Estimate</h3>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <tbody>
+                <tr>
+                  <th style={{ border: '1px solid #ddd', padding: '10px', background: '#e6f0f8' }}>Materials</th>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>LKR {report.totals.materials.min.toLocaleString()} – {report.totals.materials.max.toLocaleString()}</td>
+                </tr>
+                <tr>
+                  <th style={{ border: '1px solid #ddd', padding: '10px', background: '#e6f0f8' }}>Labor</th>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>LKR {report.totals.labor.min.toLocaleString()} – {report.totals.labor.max.toLocaleString()}</td>
+                </tr>
+                <tr style={{ fontWeight: 'bold' }}>
+                  <th style={{ border: '1px solid #ddd', padding: '10px', background: '#e6f0f8' }}>Total</th>
+                  <td style={{ border: '1px solid #ddd', padding: '10px' }}>LKR {report.totals.total.min.toLocaleString()} – {report.totals.total.max.toLocaleString()}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+export default Estimator
