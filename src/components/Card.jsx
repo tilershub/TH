@@ -1,8 +1,9 @@
-export default function Card({ title, children }) {
+import React from 'react'
+export default function Card({title,details}){
   return (
     <div className="card">
       <h3>{title}</h3>
-      <div>{children}</div>
+      <p>{details}</p>
     </div>
   )
 }

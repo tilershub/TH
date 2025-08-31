@@ -1,14 +1,13 @@
-export default function Header() {
+import React from 'react'
+export default function Header(){
   return (
-    <header className="appbar">
-      <div className="appbar-row">
-        <a href="/" className="logo-wrap">TILERSHUB</a>
-        <nav className="nav-menu">
-          <a href="/">Home</a>
-          <a href="/blog">Blog</a>
-          <a href="/estimator">Estimator</a>
-        </nav>
-      </div>
+    <header>
+      <nav style={{display:'flex',gap:'20px',alignItems:'center'}}>
+        <h1 style={{color:'var(--primary)',marginRight:'auto'}}>TILERSHUB</h1>
+        <a href="#">Home</a>
+        <a href="#">Blog</a>
+        <a href="#">Estimator</a>
+      </nav>
     </header>
   )
 }

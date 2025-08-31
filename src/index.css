@@ -1,6 +1,14 @@
-/* Global reset & tokens */
-*{margin:0;padding:0;box-sizing:border-box}
-html,body,#root{height:100%}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Roboto',sans-serif;background:#fff;color:#1a1a1a;line-height:1.6}
-a{text-decoration:none;color:inherit}
-img{max-width:100%;display:block}
+/* Base styles */
+:root{
+  --primary:#2563eb;
+  --text:#0f172a;
+  --muted:#64748b;
+  --bg:#ffffff;
+  --border:#e5e7eb;
+}
+
+body{margin:0;font-family:sans-serif;background:var(--bg);color:var(--text)}
+.container{max-width:1040px;margin:0 auto;padding:0 16px}
+a{text-decoration:none;color:var(--primary)}
+.row-head{display:flex;justify-content:space-between;align-items:center;margin:20px 0}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}

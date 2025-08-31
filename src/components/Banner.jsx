@@ -1,9 +1,9 @@
-export default function Banner() {
+import React from 'react'
+export default function Banner(){
   return (
     <div className="banner">
-      <img src="https://via.placeholder.com/1200x400" alt="Banner" />
-      <div className="overlay">
-        <h2>Welcome to TILERSHUB</h2>
+      <div>
+        <h1>Welcome to TILERSHUB</h1>
         <p>Your trusted tiling partner</p>
       </div>
     </div>

@@ -1,8 +1,9 @@
-export default function BlogCard({ title, excerpt }) {
+import React from 'react'
+export default function BlogCard({title,intro}){
   return (
     <div className="blog-card">
       <h3>{title}</h3>
-      <p>{excerpt}</p>
+      <p>{intro}</p>
     </div>
   )
 }
