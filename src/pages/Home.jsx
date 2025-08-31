@@ -7,7 +7,7 @@ const SUPABASE_URL = "https://todzlrbaovbqdwxdlcxs.supabase.co"
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRvZHpscmJhb3ZicWR3eGRsY3hzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUxNzM1MjIsImV4cCI6MjA3MDc0OTUyMn0.zsE2fHxF8QUPpiOfYXKz4oe8wVccN76ewDd56u2F6FY"
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
-// Safe image
+// Safe image with graceful fallback
 const SafeImage = ({ src, alt, className }) => {
   const [ok, setOk] = useState(true)
   return (
@@ -28,7 +28,7 @@ const AdSlider = ({ items = [], interval = 3500 }) => {
   const [idx, setIdx] = useState(0)
   const [pause, setPause] = useState(false)
 
-  // sync index when user swipes
+  // sync index while swiping
   useEffect(() => {
     const el = trackRef.current
     if (!el) return
@@ -116,11 +116,11 @@ const Home = () => {
     { path: '/tilers?service=repair', icon: '🛠️', label: 'Tile Repair' }
   ]), [])
 
-  // 👉 replace with your real banner images/links
+  // Replace with your real banner images (recommended ~1600×400 for desktop)
   const banners = useMemo(() => ([
-    { img: '/banners/tilershub-offer-1.jpg', href: '/tilers', alt: 'Find certified tilers' },
-    { img: '/banners/tools-sale.jpg', href: '/shop', alt: 'Save on tiling tools' },
-    { img: '/banners/estimator-promo.jpg', href: '/estimator', alt: 'Get a quick estimate' },
+    { img: '/banners/tilershub-offer-1.jpg', href: '/tilers',    alt: 'Find certified tilers' },
+    { img: '/banners/tools-sale.jpg',        href: '/shop',      alt: 'Save on tiling tools' },
+    { img: '/banners/estimator-promo.jpg',   href: '/estimator', alt: 'Get a quick estimate' },
   ]), [])
 
   useEffect(() => {
@@ -169,10 +169,10 @@ const Home = () => {
         <div className="hero-badge">TILERSHUB CERTIFIED</div>
         <h1 id="hero-title">Book trusted help<br/>for home tiling tasks</h1>
 
-        {/* 🔁 Banner Ads (replaces search bar) */}
+        {/* Horizontal banner carousel */}
         <AdSlider items={banners} />
 
-        {/* Keep quick categories */}
+        {/* Quick categories */}
         <div className="quick-cats" aria-label="Popular tiling services">
           {quickServices.map(({ path, icon, label }) => (
             <Link key={path} to={path} className="chip">{icon} {label}</Link>
@@ -183,8 +183,6 @@ const Home = () => {
           Available for <strong>Site Visits</strong>, <strong>Quotation</strong>, and <strong>Full Installations</strong>. Book verified professionals near you.
         </p>
       </section>
-
-      {/* (Optional) remove the old single banner-center section since slider exists */}
 
       {/* Stats */}
       <section className="stats-band" aria-label="TILERSHUB stats">
