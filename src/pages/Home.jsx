@@ -1,4 +1,3 @@
-// src/pages/Home.jsx
 import React from 'react'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
@@ -11,36 +10,18 @@ export default function Home() {
   return (
     <>
       <Header />
-
       <main className="container">
-        {/* Banner */}
-        <Banner
-          items={[
-            {
-              img: '/images/banner1.jpg',
-              title: 'Professional Tiling Services',
-              sub: 'Your trusted tiling partner',
-              cta: 'Find Tilers',
-              href: '/tilers',
-            },
-            {
-              img: '/images/banner2.jpg',
-              title: 'Certified Tilers',
-              sub: 'Quality work guaranteed',
-              cta: 'View Profiles',
-              href: '/tilers',
-            },
-          ]}
-        />
+        {/* If Banner ever fails, comment it out and the page still renders */}
+        <Banner />
 
-        {/* Search */}
-        <SearchBar onSearch={(q) => console.log('Searching:', q)} />
+        <div style={{ marginTop: 16 }}>
+          <SearchBar onSearch={(q) => console.log('search:', q)} />
+        </div>
 
-        {/* Featured Tilers */}
-        <section style={{ marginTop: '2rem' }}>
+        <section style={{ marginTop: 24 }}>
           <div className="row-head">
             <h2>Featured Tilers</h2>
-            <a href="/tilers" className="link-accent">See all</a>
+            <a className="link-accent" href="/tilers">See all</a>
           </div>
           <div className="cards-grid">
             <Card />
@@ -49,11 +30,10 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Blog Section */}
-        <section style={{ marginTop: '2rem' }}>
+        <section style={{ marginTop: 24 }}>
           <div className="row-head">
             <h2>From Blog</h2>
-            <a href="/blog" className="link-accent">See all</a>
+            <a className="link-accent" href="/blog">See all</a>
           </div>
           <div className="cards-grid">
             <BlogCard
@@ -63,7 +43,6 @@ export default function Home() {
           </div>
         </section>
       </main>
-
       <Footer />
     </>
   )
