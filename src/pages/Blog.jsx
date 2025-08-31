@@ -1,0 +1,1 @@
+export default function Blog(){return <main className='container'><h1>Blog Page</h1></main>}

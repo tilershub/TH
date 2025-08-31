@@ -1,203 +1,43 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { createClient } from '@supabase/supabase-js'
-import { Grid2x2, Bath, Waves, Hammer, Layers } from 'lucide-react'
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import Banner from '../components/Banner';
+import SearchBar from '../components/SearchBar';
+import Card from '../components/Card';
+import BlogCard from '../components/BlogCard';
 
-const SUPABASE_URL = "https://todzlrbaovbqdwxdlcxs.supabase.co"
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRvZHpscmJhb3ZicWR3eGRsY3hzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUxNzM1MjIsImV4cCI6MjA3MDc0OTUyMn0.zsE2fHxF8QUPpiOfYXKz4oe8wVccN76ewDd56u2F6FY"
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-
-/* safe image with fallback */
-const SafeImage = ({ src, alt, className }) => {
-  const [ok, setOk] = useState(true)
-  return (
-    <img
-      className={className}
-      src={ok && src ? src : '/icons/placeholder-tile.png'}
-      alt={alt}
-      loading="lazy"
-      decoding="async"
-      onError={() => setOk(false)}
-    />
-  )
-}
-
-/* banner slider with overlay CTA */
-const BannerSlider = ({ slides = [], interval = 3500 }) => {
-  const ref = useRef(null)
-  const [idx, setIdx] = useState(0)
-  const [pause, setPause] = useState(false)
-
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const onScroll = () => {
-      const w = el.clientWidth
-      const n = Math.round(el.scrollLeft / w)
-      if (n !== idx) setIdx(n)
-    }
-    el.addEventListener('scroll', onScroll, { passive: true })
-    return () => el.removeEventListener('scroll', onScroll)
-  }, [idx])
-
-  useEffect(() => {
-    if (pause || slides.length <= 1) return
-    const id = setInterval(() => {
-      const el = ref.current
-      if (!el) return
-      const w = el.clientWidth
-      const next = (idx + 1) % slides.length
-      el.scrollTo({ left: next * w, behavior: 'smooth' })
-      setIdx(next)
-    }, interval)
-    return () => clearInterval(id)
-  }, [idx, slides.length, pause, interval])
-
-  if (!slides.length) return null
-
-  return (
-    <div
-      className="banner-wrap"
-      onMouseEnter={() => setPause(true)}
-      onMouseLeave={() => setPause(false)}
-      onTouchStart={() => setPause(true)}
-      onTouchEnd={() => setPause(false)}
-    >
-      <div className="banner-track" ref={ref}>
-        {slides.map((s, i) => (
-          <div className="banner-card" key={i}>
-            <SafeImage className="banner-img" src={s.img} alt={s.alt || ''} />
-            <div className="banner-overlay">
-              <h3 className="banner-title">{s.title}</h3>
-              <p className="banner-sub">{s.sub}</p>
-              <Link to={s.href || '#'} className="btn btn--cta">Learn More</Link>
-            </div>
-          </div>
-        ))}
-      </div>
-      <div className="ad-dots">
-        {slides.map((_, i) => (
-          <button
-            key={i}
-            className={`ad-dot ${i === idx ? 'is-active' : ''}`}
-            onClick={() => {
-              const el = ref.current
-              if (!el) return
-              el.scrollTo({ left: i * el.clientWidth, behavior: 'smooth' })
-              setIdx(i)
-            }}
-            aria-label={`Go to banner ${i + 1}`}
-          />
-        ))}
-      </div>
-    </div>
-  )
-}
-
-const Home = () => {
-  const [tilers, setTilers] = useState([])
-
-  const slides = useMemo(() => ([
-    { img: '/banners/tilershub-1.jpg', title: 'Professional Tiling Services', sub: 'Transform your space with expert craftsmanship', href: '/tilers', alt: 'Tiling services' },
-    { img: '/banners/tilershub-2.jpg', title: 'Certified, Vetted Pros',       sub: 'Book site visits, quotes, and installs',         href: '/tilers', alt: 'Certified pros' },
-    { img: '/banners/tilershub-3.jpg', title: 'Get a Quick Estimate',          sub: 'Transparent pricing, no surprises',               href: '/estimator', alt: 'Quick estimate' },
-  ]), [])
-
-  const categories = [
-    { key: 'all', label: 'All', icon: Grid2x2 },
-    { key: 'floor', label: 'Floor Tiling', icon: Layers },
-    { key: 'bathroom', label: 'Bathroom', icon: Bath },
-    { key: 'pool', label: 'Swimming Pool', icon: Waves },
-    { key: 'renovation', label: 'Renovation', icon: Hammer },
-  ]
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const res = await fetch('/data/tilers.json', { cache: 'no-store' })
-        const all = await res.json()
-        const featured = all.filter(t => t.featured)
-        const topRated = all.slice().sort((a, b) =>
-          (b.rating || 0) - (a.rating || 0) || (b.reviewCount || 0) - (a.reviewCount || 0)
-        )
-        const seen = new Set()
-        const merged = [...featured, ...topRated].filter(t => (seen.has(t.id) ? false : seen.add(t.id)))
-        setTilers(merged.slice(0, 5))
-      } catch (e) {
-        console.error(e)
-      }
-    })()
-  }, [])
-
+export default function Home() {
   return (
     <>
-      {/* Banner */}
-      <section className="container section-pad">
-        <BannerSlider slides={slides} />
-      </section>
+      <Header />
+      <main className="container">
+        <Banner />
+        <SearchBar />
 
-      {/* Category pills */}
-      <section className="container cat-row">
-        <div className="cat-scroller">
-          {categories.map((c, i) => {
-            const Icon = c.icon
-            const active = i === 0
-            return (
-              <Link
-                key={c.key}
-                to={c.key === 'all' ? '/tilers' : `/tilers?service=${c.key}`}
-                className={`cat-pill ${active ? 'is-active' : ''}`}
-              >
-                <Icon size={18} />
-                <span>{c.label}</span>
-              </Link>
-            )
-          })}
-        </div>
-      </section>
-
-      {/* Featured Tilers */}
-      <section className="container">
-        <div className="row-head">
-          <h2>Featured Tilers</h2>
-          <Link to="/tilers" className="link-accent">View All</Link>
-        </div>
-
+        <div className="row-head"><h2>Featured Tilers</h2><a href="#" className="link-accent">See all</a></div>
         <div className="cards-grid">
-          {tilers.map((t) => (
-            <article key={t.id} className="card tiler-card">
-              <Link to={`/tilers/tiler/${t.id}`} className="tiler-photo">
-                <SafeImage className="tiler-img" src={t.image} alt={`${t.name} cover`} />
-                <div className="rating-pill">★ {(t.rating || 0).toFixed(1)}</div>
-                {(t.avatar || t.image) && (
-                  <img
-                    className="tiler-avatar"
-                    src={t.avatar || t.image}
-                    alt={`${t.name} avatar`}
-                    onError={e => (e.currentTarget.style.visibility = 'hidden')}
-                  />
-                )}
-                <Link to={`/tilers/tiler/${t.id}`} className="floating-cta">
-                  <span className="cta-icon">🧮</span> Quick Estimate
-                </Link>
-              </Link>
-
-              <div className="tiler-body">
-                <div className="title-row">
-                  <Link to={`/tilers/tiler/${t.id}`} className="tiler-title">{t.name}</Link>
-                  {t.certified && <span className="cert-chip">✔ Certified</span>}
-                </div>
-                <div className="meta-row">
-                  {t.city && <span className="meta">📍 {t.city}</span>}
-                  {(t.experience || t.yearsExp) && <span className="meta">💼 {t.experience || t.yearsExp} yrs exp</span>}
-                </div>
-              </div>
-            </article>
-          ))}
+          <Card title="Tiler 1">Details...</Card>
+          <Card title="Tiler 2">Details...</Card>
+          <Card title="Tiler 3">Details...</Card>
         </div>
-      </section>
+
+        <div className="row-head"><h2>From Blog</h2><a href="#" className="link-accent">See all</a></div>
+        <div className="cards-grid">
+          <BlogCard title="How to choose tiles" excerpt="Some intro..." />
+        </div>
+
+        <div className="row-head"><h2>More Tilers</h2></div>
+        <div className="cards-grid">
+          <Card title="Tiler 4">Details...</Card>
+          <Card title="Tiler 5">Details...</Card>
+          <Card title="Tiler 6">Details...</Card>
+        </div>
+
+        <div className="row-head"><h2>Latest Blog</h2></div>
+        <div className="cards-grid">
+          <BlogCard title="Bathroom design tips" excerpt="Some intro..." />
+        </div>
+      </main>
+      <Footer />
     </>
   )
 }
-
-export default Home
