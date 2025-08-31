@@ -35,7 +35,7 @@ a{color:inherit}
 /* Layout */
 .container{max-width:1200px;margin:0 auto;padding:0 20px}
 
-/* Header/Appbar (kept minimal if you have one) */
+/* Header/Appbar */
 .appbar{background:var(--surface);box-shadow:var(--shadow-sm);position:sticky;top:0;z-index:1000}
 .appbar-row{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;max-width:1200px;margin:0 auto}
 .logo-wrap{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit;padding:8px;border-radius:10px;transition:background-color .2s}
@@ -72,17 +72,6 @@ a{color:inherit}
 }
 .hero-note{margin-top:16px;opacity:.85;max-width:620px;margin-left:auto;margin-right:auto}
 
-/* Search Bar */
-.searchbar{
-  display:flex;max-width:560px;margin:22px auto 10px;background:#fff;border-radius:14px;
-  overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow-sm)
-}
-.searchbar input{flex:1;padding:14px 16px;border:0;font-size:16px;outline:none;color:#333}
-.searchbar button{
-  background:var(--primary);border:0;padding:0 16px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center
-}
-.searchbar button:hover{background:var(--primary-600)}
-
 /* Quick Categories */
 .quick-cats{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:18px 0}
 .chip{
@@ -90,6 +79,59 @@ a{color:inherit}
   color:#2d3b4a;font-size:14px;transition:background-color .2s,border-color .2s;border:1px solid #e9eef7
 }
 .chip:hover{background:#edf3ff;border-color:#dbe7ff}
+
+/* Banner Ad Slider */
+.ad-slider{
+  margin: 20px auto;
+  max-width: 960px;
+}
+.ad-track{
+  display:flex;
+  overflow-x:auto;
+  scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+  gap:12px;
+}
+.ad-track::-webkit-scrollbar{display:none}
+.ad-slide{
+  flex: 0 0 100%;
+  scroll-snap-align:center;
+  border-radius: var(--radius-lg);
+  border:1px solid var(--border);
+  background: var(--surface-2);
+  box-shadow: var(--shadow-sm);
+  aspect-ratio: 16/7;
+  overflow:hidden;
+}
+.ad-img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+.ad-dots{
+  display:flex;
+  justify-content:center;
+  gap:6px;
+  padding-top:10px;
+}
+.ad-dot{
+  width:8px; height:8px;
+  border-radius:999px;
+  border:0;
+  cursor:pointer;
+  background:#cbd5e1;
+  transition:transform .15s, background .15s;
+}
+.ad-dot.is-active{
+  background:var(--primary);
+  transform:scale(1.25);
+}
+@media (max-width:640px){
+  .ad-slider{margin: 14px auto}
+  .ad-slide{aspect-ratio: 16/9}
+}
 
 /* Stats Band */
 .stats-band{background:var(--surface-2);padding:28px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
@@ -107,21 +149,19 @@ a{color:inherit}
 .card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
 .m-card{} .m-elev-1{box-shadow:var(--shadow-sm)}
 
-/* ===== Tiler Card (image-first like your screenshot) ===== */
+/* Tiler Card */
 .tiler-card{padding:0;border-radius:20px;overflow:hidden;box-shadow:var(--shadow-sm)}
 .tiler-photo{position:relative;display:block;aspect-ratio:16/9;background:#f3f4f6}
 .tiler-img{width:100%;height:100%;object-fit:cover;display:block}
-/* rating pill top-right */
 .rating-pill{
   position:absolute;top:12px;right:12px;background:#111827;color:#fff;padding:6px 10px;border-radius:999px;
   font-size:13px;font-weight:700;box-shadow:0 6px 16px rgba(0,0,0,.25)
 }
-/* circular avatar overlapping image */
 .tiler-avatar{
   position:absolute;left:12px;bottom:-22px;width:44px;height:44px;border-radius:50%;
   border:3px solid #fff;object-fit:cover;box-shadow:0 4px 10px rgba(0,0,0,.2)
 }
-.tiler-body{padding:30px 16px 16px} /* extra top to clear avatar */
+.tiler-body{padding:30px 16px 16px}
 .title-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .tiler-title{text-decoration:none;color:inherit;font-weight:800;font-size:18px;letter-spacing:-.01em}
 .tiler-title:hover{color:var(--primary)}
@@ -161,6 +201,10 @@ a{color:inherit}
 .promise-list li:last-child{border-bottom:0}
 .how-it-works ol{max-width:600px;margin:0 auto;text-align:left}
 .how-it-works li{padding:12px 0;font-size:16px}
+@media (max-width:640px){
+  .how-it-works ol{padding:0 10px}
+  .how-it-works li{font-size:15px;line-height:1.4}
+}
 
 /* Tags Cloud */
 .tags-cloud{padding:50px 20px;text-align:center}
