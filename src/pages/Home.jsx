@@ -1,14 +1,13 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { Search } from 'lucide-react'
 import { createClient } from '@supabase/supabase-js'
 
-// ——— Supabase (move to env vars in production)
+// Supabase (move to env in prod)
 const SUPABASE_URL = "https://todzlrbaovbqdwxdlcxs.supabase.co"
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRvZHpscmJhb3ZicWR3eGRsY3hzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUxNzM1MjIsImV4cCI6MjA3MDc0OTUyMn0.zsE2fHxF8QUPpiOfYXKz4oe8wVccN76ewDd56u2F6FY"
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
-// ——— Safe image with fallback (no blue “?”)
+// Safe image
 const SafeImage = ({ src, alt, className }) => {
   const [ok, setOk] = useState(true)
   return (
@@ -20,6 +19,85 @@ const SafeImage = ({ src, alt, className }) => {
       decoding="async"
       onError={() => setOk(false)}
     />
+  )
+}
+
+/** ---- Banner Slider (replaces search bar) ---- */
+const AdSlider = ({ items = [], interval = 3500 }) => {
+  const trackRef = useRef(null)
+  const [idx, setIdx] = useState(0)
+  const [pause, setPause] = useState(false)
+
+  // sync index when user swipes
+  useEffect(() => {
+    const el = trackRef.current
+    if (!el) return
+    const onScroll = () => {
+      const w = el.clientWidth
+      const newIdx = Math.round(el.scrollLeft / w)
+      if (newIdx !== idx) setIdx(newIdx)
+    }
+    el.addEventListener('scroll', onScroll, { passive: true })
+    return () => el.removeEventListener('scroll', onScroll)
+  }, [idx])
+
+  // autoplay
+  useEffect(() => {
+    if (pause || items.length <= 1) return
+    const id = setInterval(() => {
+      const el = trackRef.current
+      if (!el) return
+      const w = el.clientWidth
+      const next = (idx + 1) % items.length
+      el.scrollTo({ left: next * w, behavior: 'smooth' })
+      setIdx(next)
+    }, interval)
+    return () => clearInterval(id)
+  }, [idx, items.length, pause, interval])
+
+  const goTo = (i) => {
+    const el = trackRef.current
+    if (!el) return
+    el.scrollTo({ left: i * el.clientWidth, behavior: 'smooth' })
+    setIdx(i)
+  }
+
+  if (!items.length) return null
+
+  return (
+    <div
+      className="ad-slider"
+      onMouseEnter={() => setPause(true)}
+      onMouseLeave={() => setPause(false)}
+      onTouchStart={() => setPause(true)}
+      onTouchEnd={() => setPause(false)}
+    >
+      <div className="ad-track" ref={trackRef}>
+        {items.map((b, i) => (
+          <a
+            key={i}
+            className="ad-slide"
+            href={b.href || '#'}
+            target={b.href ? '_blank' : undefined}
+            rel={b.href ? 'noopener noreferrer' : undefined}
+            aria-label={b.alt || `banner ${i + 1}`}
+          >
+            <SafeImage className="ad-img" src={b.img} alt={b.alt || ''} />
+          </a>
+        ))}
+      </div>
+
+      <div className="ad-dots" role="tablist" aria-label="banner pagination">
+        {items.map((_, i) => (
+          <button
+            key={i}
+            className={`ad-dot ${i === idx ? 'is-active' : ''}`}
+            aria-label={`Go to banner ${i + 1}`}
+            onClick={() => goTo(i)}
+          />
+        ))}
+      </div>
+    </div>
   )
 }
 
@@ -38,31 +116,33 @@ const Home = () => {
     { path: '/tilers?service=repair', icon: '🛠️', label: 'Tile Repair' }
   ]), [])
 
+  // 👉 replace with your real banner images/links
+  const banners = useMemo(() => ([
+    { img: '/banners/tilershub-offer-1.jpg', href: '/tilers', alt: 'Find certified tilers' },
+    { img: '/banners/tools-sale.jpg', href: '/shop', alt: 'Save on tiling tools' },
+    { img: '/banners/estimator-promo.jpg', href: '/estimator', alt: 'Get a quick estimate' },
+  ]), [])
+
   useEffect(() => {
     const ctrl = new AbortController()
     ;(async () => {
       try {
-        // Tilers (from public/data/tilers.json)
         const res = await fetch('/data/tilers.json', { signal: ctrl.signal, cache: 'no-store' })
         const all = await res.json()
-
-        // Featured + top-rated (dedup)
         const featured = all.filter(t => t.featured)
-        const topRated = all
-          .slice()
-          .sort((a, b) => (b.rating || 0) - (a.rating || 0) || (b.reviewCount || 0) - (a.reviewCount || 0))
+        const topRated = all.slice().sort((a, b) =>
+          (b.rating || 0) - (a.rating || 0) || (b.reviewCount || 0) - (a.reviewCount || 0)
+        )
         const seen = new Set()
         const merged = [...featured, ...topRated].filter(t => (seen.has(t.id) ? false : seen.add(t.id)))
         setTilers(merged.slice(0, 6))
 
-        // Testimonials (Supabase)
         const { data: reviewsData } = await supabase
           .from('reviews')
           .select('name, comment, quality, service, timeline, pricing, cleanliness, created_at')
           .eq('approved', true)
           .order('created_at', { ascending: false })
           .limit(2)
-
         if (reviewsData) setTestimonials(reviewsData)
       } catch (e) {
         if (e.name !== 'AbortError') setError('Could not load content. Please try again.')
@@ -79,11 +159,7 @@ const Home = () => {
   }
 
   if (loading) {
-    return (
-      <div className="container" style={{ padding: '40px 20px', textAlign: 'center' }}>
-        Loading…
-      </div>
-    )
+    return <div className="container" style={{ padding: '40px 20px', textAlign: 'center' }}>Loading…</div>
   }
 
   return (
@@ -93,16 +169,10 @@ const Home = () => {
         <div className="hero-badge">TILERSHUB CERTIFIED</div>
         <h1 id="hero-title">Book trusted help<br/>for home tiling tasks</h1>
 
-        {/* Search */}
-        <form className="searchbar" onSubmit={(e) => e.preventDefault()} role="search" aria-label="Find services">
-          <input id="home-search" type="search" placeholder="What do you need help with?" aria-label="Search services" />
-          <button type="button" id="search-go" aria-label="Search">
-            <Search size={20} />
-            <span className="sr-only">Search</span>
-          </button>
-        </form>
+        {/* 🔁 Banner Ads (replaces search bar) */}
+        <AdSlider items={banners} />
 
-        {/* Quick categories */}
+        {/* Keep quick categories */}
         <div className="quick-cats" aria-label="Popular tiling services">
           {quickServices.map(({ path, icon, label }) => (
             <Link key={path} to={path} className="chip">{icon} {label}</Link>
@@ -114,12 +184,7 @@ const Home = () => {
         </p>
       </section>
 
-      {/* Banner */}
-      <section className="container banner-center">
-        <Link to="/tilers">
-          <img src="/icons/find-certified-tiler.png" alt="Find Certified Tilers in Sri Lanka - TILERSHUB"/>
-        </Link>
-      </section>
+      {/* (Optional) remove the old single banner-center section since slider exists */}
 
       {/* Stats */}
       <section className="stats-band" aria-label="TILERSHUB stats">
@@ -130,7 +195,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Popular Projects (tiler cards) */}
+      {/* Popular Projects – tiler cards */}
       <section className="container" aria-labelledby="popular-projects-title">
         <div className="section-head">
           <h2 id="popular-projects-title">Popular Projects</h2>
@@ -142,12 +207,9 @@ const Home = () => {
         <div className="cards-grid">
           {tilers.map((t) => (
             <article key={t.id} className="card tiler-card ripple">
-              {/* Photo */}
               <Link to={`/tilers/tiler/${t.id}`} className="tiler-photo">
                 <SafeImage className="tiler-img" src={t.image} alt={`${t.name} cover`} />
-                {/* rating pill */}
                 <div className="rating-pill">★ {(t.rating || 0).toFixed(1)}</div>
-                {/* avatar (fallback to main image) */}
                 {(t.avatar || t.image) && (
                   <img
                     className="tiler-avatar"
@@ -158,7 +220,6 @@ const Home = () => {
                 )}
               </Link>
 
-              {/* Body */}
               <div className="tiler-body">
                 <div className="title-row">
                   <Link to={`/tilers/tiler/${t.id}`} className="tiler-title">{t.name}</Link>
