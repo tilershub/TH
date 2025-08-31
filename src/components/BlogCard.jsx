@@ -1,9 +1,12 @@
 import React from 'react'
-export default function BlogCard({title,intro}){
+import styles from './BlogCard.module.css'
+
+export default function BlogCard({ title, meta = '3 min read', excerpt = '' }) {
   return (
-    <div className="blog-card">
-      <h3>{title}</h3>
-      <p>{intro}</p>
-    </div>
+    <article className={styles.card}>
+      <h3 className={styles.title}>{title}</h3>
+      {meta && <div className={styles.meta}>{meta}</div>}
+      {excerpt && <p className={styles.excerpt}>{excerpt}</p>}
+    </article>
   )
 }

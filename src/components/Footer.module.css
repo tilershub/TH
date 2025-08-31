@@ -1,0 +1,11 @@
+.footer{background:#0f172a;color:#e2e8f0;margin-top:40px}
+.inner{display:grid;grid-template-columns:1.2fr 2fr;gap:24px;padding:28px 16px}
+.logo{font-weight:900;letter-spacing:.02em;margin-bottom:6px}
+.brand p{color:#94a3b8}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:18px}
+h4{font-size:14px;margin-bottom:10px;color:#cbd5e1}
+ul{list-style:none;padding:0;margin:0}
+a{color:#cbd5e1;text-decoration:none}
+a:hover{color:#fff}
+.copy{text-align:center;font-size:12px;color:#94a3b8;padding:10px 0;border-top:1px solid rgba(255,255,255,.08)}
+@media (max-width:768px){.inner{grid-template-columns:1fr}}

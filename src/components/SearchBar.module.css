@@ -1,0 +1,4 @@
+.wrap{display:flex;gap:10px;background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:8px 8px 8px 12px;box-shadow:0 8px 24px rgba(15,23,42,.06)}
+.input{flex:1;border:0;outline:0;background:transparent;font-size:15px;color:#0f172a}
+.btn{background:#2563eb;color:#fff;border:0;border-radius:12px;padding:10px 16px;font-weight:800}
+.btn:hover{background:#1d4ed8}
