@@ -1,1 +1,14 @@
-{"tileSizes":[{"value":"600x600","label":"600x600 mm"},{"value":"300x600","label":"300x600 mm"}]}
+[
+  {
+    "size": "12x12",
+    "area": 1.0
+  },
+  {
+    "size": "16x16",
+    "area": 1.78
+  },
+  {
+    "size": "24x24",
+    "area": 3.56
+  }
+]

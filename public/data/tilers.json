@@ -1,1 +1,68 @@
-[{"id":1,"name":"Tiler 1"},{"id":2,"name":"Tiler 2"}]
+[
+  {
+    "id": "t1",
+    "name": "Premium Tiles Lanka",
+    "city": "Colombo",
+    "yearsExp": 8,
+    "startingFrom": "LKR 800/sq ft",
+    "rating": 4.8,
+    "certified": true,
+    "cover": "/images/tiler1.jpg",
+    "avatar": "/images/avatar1.jpg"
+  },
+  {
+    "id": "t2",
+    "name": "Master Craft Tiling",
+    "city": "Kandy",
+    "yearsExp": 10,
+    "startingFrom": "LKR 900/sq ft",
+    "rating": 4.7,
+    "certified": true,
+    "cover": "/images/tiler2.jpg",
+    "avatar": "/images/avatar2.jpg"
+  },
+  {
+    "id": "t3",
+    "name": "Pro Tiles Galle",
+    "city": "Galle",
+    "yearsExp": 7,
+    "startingFrom": "LKR 750/sq ft",
+    "rating": 4.9,
+    "certified": true,
+    "cover": "/images/tiler3.jpg",
+    "avatar": "/images/avatar3.jpg"
+  },
+  {
+    "id": "t4",
+    "name": "Elegant Tiling Works",
+    "city": "Negombo",
+    "yearsExp": 6,
+    "startingFrom": "LKR 700/sq ft",
+    "rating": 4.6,
+    "certified": false,
+    "cover": "/images/tiler1.jpg",
+    "avatar": "/images/avatar1.jpg"
+  },
+  {
+    "id": "t5",
+    "name": "City Tile Pros",
+    "city": "Maharagama",
+    "yearsExp": 5,
+    "startingFrom": "LKR 680/sq ft",
+    "rating": 4.5,
+    "certified": false,
+    "cover": "/images/tiler2.jpg",
+    "avatar": "/images/avatar2.jpg"
+  },
+  {
+    "id": "t6",
+    "name": "Coastal Tile Crew",
+    "city": "Matara",
+    "yearsExp": 9,
+    "startingFrom": "LKR 820/sq ft",
+    "rating": 4.7,
+    "certified": true,
+    "cover": "/images/tiler3.jpg",
+    "avatar": "/images/avatar3.jpg"
+  }
+]

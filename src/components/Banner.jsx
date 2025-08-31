@@ -1,71 +1,38 @@
-import React, { useEffect, useRef, useState } from 'react'
-import styles from './Banner.module.css'
+import React from 'react'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Autoplay, Pagination } from 'swiper/modules'
+import 'swiper/css'
+import 'swiper/css/pagination'
 
-export default function Banner({ items = [], interval = 3500 }){
-  const ref = useRef(null)
-  const [idx, setIdx] = useState(0)
-  const [pause, setPause] = useState(false)
+const slides = [
+  { img:'/images/banner1.jpg', title:'Professional Tiling Services', sub:'Expert craftsmanship for homes & offices', cta:'Find Tilers', href:'/tilers' },
+  { img:'/images/banner2.jpg', title:'Certified Pros Near You', sub:'Background-checked, portfolio-reviewed', cta:'Browse Profiles', href:'/tilers' },
+  { img:'/images/banner3.jpg', title:'Quick Cost Estimates', sub:'Transparent pricing per sq.ft', cta:'Get Estimate', href:'/estimator' },
+]
 
-  const list = items.length ? items : [
-    { img: '/images/banner-1.jpg', title: 'Professional Tiling Services', sub: 'Transform your space with expert craftsmanship', cta: 'Learn More', href:'#' },
-    { img: '/images/banner-2.jpg', title: 'Certified Pros Near You', sub: 'Book inspections and get instant quotes', cta: 'Find Tilers', href:'/tilers' },
-    { img: '/images/banner-3.jpg', title: 'Get a Quick Estimate', sub: 'Simple pricing per square foot', cta: 'Get Estimate', href:'/estimator' },
-  ]
-
-  useEffect(()=>{
-    const el = ref.current
-    if(!el) return
-    const onScroll = ()=>{
-      const i = Math.round(el.scrollLeft / el.clientWidth)
-      if(i !== idx) setIdx(i)
-    }
-    el.addEventListener('scroll', onScroll, { passive: true })
-    return ()=> el.removeEventListener('scroll', onScroll)
-  }, [idx])
-
-  useEffect(()=>{
-    if(pause || list.length <= 1) return
-    const id = setInterval(()=>{
-      const el = ref.current
-      if(!el) return
-      const next = (idx + 1) % list.length
-      el.scrollTo({ left: next * el.clientWidth, behavior:'smooth' })
-      setIdx(next)
-    }, interval)
-    return ()=> clearInterval(id)
-  }, [idx, list.length, pause, interval])
-
-  const goTo = (i)=>{
-    const el = ref.current; if(!el) return;
-    el.scrollTo({ left: i * el.clientWidth, behavior:'smooth' })
-    setIdx(i)
-  }
-
+export default function Banner(){
   return (
-    <div
-      className={styles.wrap}
-      onMouseEnter={()=>setPause(true)}
-      onMouseLeave={()=>setPause(false)}
-      onTouchStart={()=>setPause(true)}
-      onTouchEnd={()=>setPause(false)}
-    >
-      <div className={styles.track} ref={ref}>
-        {list.map((b,i)=> (
-          <a key={i} className={styles.card} href={b.href || '#'} aria-label={b.title}>
-            <img className={styles.img} src={b.img} alt={b.title} loading="lazy" />
-            <div className={styles.overlay}>
-              <h2 className={styles.title}>{b.title}</h2>
-              {b.sub && <p className={styles.sub}>{b.sub}</p>}
-              {b.cta && <span className={styles.cta}>{b.cta}</span>}
-            </div>
-          </a>
+    <section className="banner container">
+      <Swiper
+        modules={[Autoplay, Pagination]}
+        autoplay={{ delay: 3500, disableOnInteraction: false }}
+        pagination={{ clickable: true }}
+        spaceBetween={16}
+        slidesPerView={1}
+      >
+        {slides.map((s, i) => (
+          <SwiperSlide key={i}>
+            <a className="banner-card" href={s.href}>
+              <img className="banner-img" src={s.img} alt={s.title} />
+              <div className="banner-overlay">
+                <h2 className="banner-title">{s.title}</h2>
+                <p className="banner-sub">{s.sub}</p>
+                <span className="banner-cta">{s.cta}</span>
+              </div>
+            </a>
+          </SwiperSlide>
         ))}
-      </div>
-      <div className={styles.dots} role="tablist" aria-label="banner pagination">
-        {list.map((_,i)=> (
-          <button key={i} className={`${styles.dot} ${i===idx?styles.active:''}`} onClick={()=>goTo(i)} aria-label={`Go to banner ${i+1}`} />
-        ))}
-      </div>
-    </div>
+      </Swiper>
+    </section>
   )
 }

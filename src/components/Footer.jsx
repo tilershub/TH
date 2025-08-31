@@ -1,17 +1,16 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import styles from './Footer.module.css'
 
 export default function Footer(){
   return (
-    <footer className={styles.footer}>
-      <div className={`${styles.inner} container`}>
-        <div className={styles.brand}>
-          <div className={styles.logo}>TILERSHUB</div>
+    <footer className="footer">
+      <div className="footer-inner container">
+        <div className="footer-brand">
+          <div className="footer-logo">TILERSHUB</div>
           <p>Book vetted tilers for site visits, quotes, and full installations.</p>
         </div>
 
-        <div className={styles.cols}>
+        <div className="footer-cols">
           <div>
             <h4>Explore</h4>
             <ul>
@@ -39,7 +38,7 @@ export default function Footer(){
           </div>
         </div>
       </div>
-      <div className={styles.copy}>© {new Date().getFullYear()} TILERSHUB. All rights reserved.</div>
+      <div className="footer-copy">© {new Date().getFullYear()} TILERSHUB. All rights reserved.</div>
     </footer>
   )
 }

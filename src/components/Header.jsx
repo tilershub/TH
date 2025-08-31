@@ -1,52 +1,24 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import styles from './Header.module.css'
 
-export default function Header() {
-  const [open, setOpen] = useState(false)
+export default function Header(){
   const location = useLocation()
-
-  const nav = [
-    { to: '/', label: 'Home' },
-    { to: '/blog', label: 'Blog' },
-    { to: '/estimator', label: 'Estimator' },
-  ]
-
-  const isActive = (path) => {
-    if (path === '/') return location.pathname === '/'
-    return location.pathname.startsWith(path)
-  }
+  const isActive = (p) => (p === '/' ? location.pathname === '/' : location.pathname.startsWith(p))
 
   return (
-    <header className={styles.header}>
-      <div className={`${styles.row} container`}>
-        <Link to="/" className={styles.logo} aria-label="TILERSHUB Home">
-          <img src="/icons/favicon.png" alt="" width="24" height="24" />
-          <span>TILERSHUB</span>
+    <header className="appbar">
+      <div className="appbar-row container">
+        <Link className="logo-wrap" to="/" aria-label="TILERSHUB Home">
+          <img src="/icons/favicon.png" alt="" height="24" width="24" />
+          <span className="site-name">TILERSHUB</span>
         </Link>
 
-        <button
-          className={styles.toggle}
-          aria-label="Toggle menu"
-          aria-expanded={open}
-          onClick={() => setOpen(!open)}
-        >
-          <span className={styles.bar} />
-          <span className={styles.bar} />
-          <span className={styles.bar} />
-        </button>
-
-        <nav className={`${styles.menu} ${open ? styles.open : ''}`} aria-label="Primary">
-          {nav.map((n) => (
-            <Link
-              key={n.to}
-              to={n.to}
-              className={`${styles.link} ${isActive(n.to) ? styles.active : ''}`}
-              onClick={() => setOpen(false)}
-            >
-              {n.label}
-            </Link>
-          ))}
+        <nav className="nav-menu" aria-label="Primary">
+          <Link className={isActive('/') ? 'active' : ''} to="/">Home</Link>
+          <Link className={isActive('/tilers') ? 'active' : ''} to="/tilers">Find Tiler</Link>
+          <Link className={isActive('/estimator') ? 'active' : ''} to="/estimator">Estimator</Link>
+          <Link className={isActive('/blog') ? 'active' : ''} to="/blog">Blog</Link>
+          <Link className={isActive('/contact') ? 'active' : ''} to="/contact">Contact</Link>
         </nav>
       </div>
     </header>
