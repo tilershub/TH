@@ -2,12 +2,11 @@ import React, { useState, useEffect, useMemo, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { createClient } from '@supabase/supabase-js'
 
-// Supabase (move to env in prod)
 const SUPABASE_URL = "https://todzlrbaovbqdwxdlcxs.supabase.co"
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRvZHpscmJhb3ZicWR3eGRsY3hzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUxNzM1MjIsImV4cCI6MjA3MDc0OTUyMn0.zsE2fHxF8QUPpiOfYXKz4oe8wVccN76ewDd56u2F6FY"
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
-/* ---------- Utilities ---------- */
+/* Safe image with fallback */
 const SafeImage = ({ src, alt, className }) => {
   const [ok, setOk] = useState(true)
   return (
@@ -22,7 +21,7 @@ const SafeImage = ({ src, alt, className }) => {
   )
 }
 
-/* ---------- Banner Slider ---------- */
+/* Horizontal rectangle banner slider */
 const AdSlider = ({ items = [], interval = 3500 }) => {
   const trackRef = useRef(null)
   const [idx, setIdx] = useState(0)
@@ -33,8 +32,8 @@ const AdSlider = ({ items = [], interval = 3500 }) => {
     if (!el) return
     const onScroll = () => {
       const w = el.clientWidth
-      const newIdx = Math.round(el.scrollLeft / w)
-      if (newIdx !== idx) setIdx(newIdx)
+      const n = Math.round(el.scrollLeft / w)
+      if (n !== idx) setIdx(n)
     }
     el.addEventListener('scroll', onScroll, { passive: true })
     return () => el.removeEventListener('scroll', onScroll)
@@ -114,11 +113,11 @@ const Home = () => {
     { path: '/tilers?service=repair', icon: '🛠️', label: 'Tile Repair' }
   ]), [])
 
-  // Replace with your real images (ideally ~1600×400)
+  // wide banners (put files in /public/banners/)
   const banners = useMemo(() => ([
-    { img: '/banners/tilershub-offer-1.jpg', href: '/tilers',    alt: 'Find certified tilers' },
-    { img: '/banners/tools-sale.jpg',        href: '/shop',      alt: 'Save on tiling tools' },
-    { img: '/banners/estimator-promo.jpg',   href: '/estimator', alt: 'Get a quick estimate' },
+    { img: '/banners/tilershub-1.jpg', href: '/tilers',    alt: 'Find certified tilers' },
+    { img: '/banners/tilershub-2.jpg', href: '/shop',      alt: 'Tools & supplies' },
+    { img: '/banners/tilershub-3.jpg', href: '/estimator', alt: 'Get a quick estimate' },
   ]), [])
 
   useEffect(() => {
@@ -162,12 +161,11 @@ const Home = () => {
 
   return (
     <>
-      {/* Hero */}
+      {/* Hero area with badges + banner */}
       <section className="hero container" aria-labelledby="hero-title">
         <div className="hero-badge">TILERSHUB CERTIFIED</div>
         <h1 id="hero-title">Book trusted help<br/>for home tiling tasks</h1>
 
-        {/* Horizontal rectangle banner carousel */}
         <AdSlider items={banners} />
 
         <div className="quick-cats" aria-label="Popular tiling services">
