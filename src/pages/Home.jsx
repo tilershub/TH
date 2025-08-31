@@ -7,7 +7,7 @@ const SUPABASE_URL = "https://todzlrbaovbqdwxdlcxs.supabase.co"
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRvZHpscmJhb3ZicWR3eGRsY3hzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUxNzM1MjIsImV4cCI6MjA3MDc0OTUyMn0.zsE2fHxF8QUPpiOfYXKz4oe8wVccN76ewDd56u2F6FY"
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
-// Safe image with graceful fallback
+/* ---------- Utilities ---------- */
 const SafeImage = ({ src, alt, className }) => {
   const [ok, setOk] = useState(true)
   return (
@@ -22,13 +22,12 @@ const SafeImage = ({ src, alt, className }) => {
   )
 }
 
-/** ---- Banner Slider (replaces search bar) ---- */
+/* ---------- Banner Slider ---------- */
 const AdSlider = ({ items = [], interval = 3500 }) => {
   const trackRef = useRef(null)
   const [idx, setIdx] = useState(0)
   const [pause, setPause] = useState(false)
 
-  // sync index while swiping
   useEffect(() => {
     const el = trackRef.current
     if (!el) return
@@ -41,7 +40,6 @@ const AdSlider = ({ items = [], interval = 3500 }) => {
     return () => el.removeEventListener('scroll', onScroll)
   }, [idx])
 
-  // autoplay
   useEffect(() => {
     if (pause || items.length <= 1) return
     const id = setInterval(() => {
@@ -116,7 +114,7 @@ const Home = () => {
     { path: '/tilers?service=repair', icon: '🛠️', label: 'Tile Repair' }
   ]), [])
 
-  // Replace with your real banner images (recommended ~1600×400 for desktop)
+  // Replace with your real images (ideally ~1600×400)
   const banners = useMemo(() => ([
     { img: '/banners/tilershub-offer-1.jpg', href: '/tilers',    alt: 'Find certified tilers' },
     { img: '/banners/tools-sale.jpg',        href: '/shop',      alt: 'Save on tiling tools' },
@@ -169,10 +167,9 @@ const Home = () => {
         <div className="hero-badge">TILERSHUB CERTIFIED</div>
         <h1 id="hero-title">Book trusted help<br/>for home tiling tasks</h1>
 
-        {/* Horizontal banner carousel */}
+        {/* Horizontal rectangle banner carousel */}
         <AdSlider items={banners} />
 
-        {/* Quick categories */}
         <div className="quick-cats" aria-label="Popular tiling services">
           {quickServices.map(({ path, icon, label }) => (
             <Link key={path} to={path} className="chip">{icon} {label}</Link>
@@ -193,7 +190,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Popular Projects – tiler cards */}
+      {/* Popular Projects */}
       <section className="container" aria-labelledby="popular-projects-title">
         <div className="section-head">
           <h2 id="popular-projects-title">Popular Projects</h2>
@@ -226,9 +223,7 @@ const Home = () => {
 
                 <div className="meta-row">
                   {t.city && <span className="meta">📍 {t.city}</span>}
-                  {(t.experience || t.yearsExp) && (
-                    <span className="meta">💼 {t.experience || t.yearsExp} yrs exp</span>
-                  )}
+                  {(t.experience || t.yearsExp) && <span className="meta">💼 {t.experience || t.yearsExp} yrs exp</span>}
                 </div>
 
                 {(t.startingFrom || t.startPrice) && (
