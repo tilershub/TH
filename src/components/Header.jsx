@@ -1,43 +1,58 @@
-import React from 'react'
-import { MapPin, Bell, Search, SlidersHorizontal } from 'lucide-react'
+import React, { useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
+import { Menu, X } from 'lucide-react'
 
 const Header = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const location = useLocation()
+
+  const navItems = [
+    { path: '/', label: 'Home' },
+    { path: '/tilers', label: 'Find Tiler' },
+    { path: '/estimator', label: 'Estimators' },
+    { path: '/blog', label: 'Blog' },
+    { path: '/contact', label: 'Contact' }
+  ]
+
+  const isActive = (path) => {
+    if (path === '/') return location.pathname === '/'
+    return location.pathname.startsWith(path)
+  }
+
   return (
-    <header className="mobile-header" role="banner">
-      <div className="container">
+    <header className="appbar" role="banner">
+      <div className="appbar-row">
+        <Link className="logo-wrap ripple" to="/" aria-label="TILERSHUB Home">
+          <img src="/icons/favicon.png" alt="" height="28" width="28"/>
+          <span className="site-name">TILERSHUB</span>
+        </Link>
 
-        {/* Location + notifications */}
-        <div className="header-top">
-          <div className="loc">
-            <MapPin size={18} />
-            <div className="loc-text">
-              <span className="muted">Current Location</span>
-              <strong>Colombo, Sri Lanka</strong>
-            </div>
-          </div>
-
-          <button className="bell" aria-label="Notifications">
-            <Bell size={20} />
-            <span className="badge">3</span>
-          </button>
-        </div>
-
-        {/* Rounded search */}
-        <form className="searchbar" role="search" onSubmit={(e)=>e.preventDefault()}>
-          <div className="search-left">
-            <Search size={18} />
-            <input
-              type="search"
-              placeholder="Search tilers, services, or location..."
-              aria-label="Search tilers, services, or location"
-            />
-          </div>
-          <button type="button" className="filter-btn" aria-label="Filters">
-            <SlidersHorizontal size={18} />
-          </button>
-        </form>
-
+        <button 
+          className="nav-toggle icon-btn ripple" 
+          aria-label="Open menu" 
+          aria-expanded={isMenuOpen}
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
+          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
       </div>
+
+      <nav 
+        className={`nav-menu ${isMenuOpen ? 'active' : ''}`} 
+        role="navigation" 
+        aria-label="Primary"
+      >
+        {navItems.map(({ path, label }) => (
+          <Link
+            key={path}
+            to={path}
+            className={isActive(path) ? 'active' : ''}
+            onClick={() => setIsMenuOpen(false)}
+          >
+            {label}
+          </Link>
+        ))}
+      </nav>
     </header>
   )
 }
