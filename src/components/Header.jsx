@@ -5,36 +5,36 @@ export default function Header() {
   const location = useLocation();
   const [open, setOpen] = useState(false);
 
-  const isActive = (p) => (p === '/' ? location.pathname === '/' : location.pathname.startsWith(p));
+  const isActive = (p) =>
+    p === '/' ? location.pathname === '/' : location.pathname.startsWith(p);
 
-  // Close menu on route change
-  useEffect(() => { setOpen(false); }, [location.pathname]);
+  // Close menu when route changes
+  useEffect(() => {
+    setOpen(false);
+  }, [location.pathname]);
 
   return (
-    <header className="header" role="banner">
+    <header className="header">
       <div className="row">
-        {/* Left: Logo / Brand */}
+        {/* Left: Logo */}
         <Link className="logo" to="/" aria-label="TILERSHUB Home">
           <img src="/icons/favicon.png" alt="" height="24" width="24" />
           <span className="site-name">TILERSHUB</span>
         </Link>
 
-        {/* Right: Hamburger (mobile) */}
+        {/* Right: Hamburger */}
         <button
           className="toggle"
-          type="button"
-          aria-label="Toggle navigation"
-          aria-controls="primary-menu"
-          aria-expanded={open ? 'true' : 'false'}
           onClick={() => setOpen((v) => !v)}
+          aria-label="Toggle navigation"
         >
           <span className="bar" />
           <span className="bar" />
           <span className="bar" />
         </button>
 
-        {/* Menu */}
-        <nav id="primary-menu" className={`menu ${open ? 'open' : ''}`} aria-label="Primary">
+        {/* Nav Menu */}
+        <nav className={`menu ${open ? 'open' : ''}`}>
           <Link className={`link ${isActive('/') ? 'active' : ''}`} to="/">Home</Link>
           <Link className={`link ${isActive('/tilers') ? 'active' : ''}`} to="/tilers">Find Tiler</Link>
           <Link className={`link ${isActive('/estimator') ? 'active' : ''}`} to="/estimator">Estimator</Link>
