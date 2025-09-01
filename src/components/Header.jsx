@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import './Header.module.css';
+import 'src/components/Header.module.css';
 
 export default function Header() {
   const location = useLocation();
